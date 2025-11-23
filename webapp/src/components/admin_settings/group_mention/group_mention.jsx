@@ -6,9 +6,9 @@ import TeamsInput from '../teams_input';
 
 export default class GroupMention extends React.Component {
     static propTypes = {
-        id: PropTypes.string.isRequired,
-        name: PropTypes.string.isRequired,
-        displayName: PropTypes.string.isRequired,
+        id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+        name: PropTypes.string,
+        displayName: PropTypes.string,
         users: PropTypes.array,
         teams: PropTypes.array,
         groups: PropTypes.array,

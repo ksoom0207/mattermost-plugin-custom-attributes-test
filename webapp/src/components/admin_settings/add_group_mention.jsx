@@ -105,6 +105,7 @@ export default class AddGroupMention extends React.Component {
         return (
             <div>
                 <GroupMention
+                    id={String(this.props.id || 0)}
                     name={this.props.name || ''}
                     displayName={this.props.displayName || ''}
                     users={this.props.users}
