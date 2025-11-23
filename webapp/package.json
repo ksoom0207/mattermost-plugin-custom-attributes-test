@@ -4,10 +4,10 @@
   "description": "This plugin serves as a starting point for writing a Mattermost plugin.",
   "main": "src/index.js",
   "scripts": {
-    "build": "node --openssl-legacy-provider ./node_modules/.bin/webpack --mode=production",
-    "build:watch": "node --openssl-legacy-provider ./node_modules/.bin/webpack --mode=production --watch",
-    "debug": "node --openssl-legacy-provider ./node_modules/.bin/webpack --mode=none",
-    "debug:watch": "node --openssl-legacy-provider ./node_modules/.bin/webpack --mode=development --watch",
+    "build": "cross-env NODE_OPTIONS=--openssl-legacy-provider webpack --mode=production",
+    "build:watch": "cross-env NODE_OPTIONS=--openssl-legacy-provider webpack --mode=production --watch",
+    "debug": "cross-env NODE_OPTIONS=--openssl-legacy-provider webpack --mode=none",
+    "debug:watch": "cross-env NODE_OPTIONS=--openssl-legacy-provider webpack --mode=development --watch",
     "lint": "eslint --ignore-pattern node_modules --ignore-pattern dist --ext .js --ext .jsx --ext tsx --ext ts . --quiet --cache",
     "fix": "eslint --ignore-pattern node_modules --ignore-pattern dist --ext .js --ext .jsx --ext tsx --ext ts . --quiet --fix --cache",
     "test": "jest --forceExit --detectOpenHandles --verbose",
@@ -20,6 +20,7 @@
   "devDependencies": {
     "@babel/cli": "7.16.8",
     "@babel/core": "7.16.12",
+    "cross-env": "^7.0.3",
     "@babel/plugin-proposal-class-properties": "7.16.7",
     "@babel/plugin-proposal-object-rest-spread": "7.16.7",
     "@babel/plugin-proposal-optional-chaining": "7.16.7",
