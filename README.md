@@ -2,20 +2,38 @@
 
 **This repository is community supported and not maintained by Mattermost. Mattermost disclaims liability for integrations, including Third Party Integrations and Mattermost Integrations. Integrations may be modified or discontinued at any time.**
 
-# Mattermost Custom Attributes Plugin 
+# Mattermost Custom Attributes Plugin
 
 [![Build Status](https://img.shields.io/circleci/project/github/mattermost/mattermost-plugin-custom-attributes/master)](https://circleci.com/gh/mattermost/mattermost-plugin-custom-attributes)
 [![Code Coverage](https://img.shields.io/codecov/c/github/mattermost/mattermost-plugin-custom-attributes/master)](https://codecov.io/gh/mattermost/mattermost-plugin-custom-attributes)
 [![Release](https://img.shields.io/github/v/release/mattermost/mattermost-plugin-custom-attributes)](https://github.com/mattermost/mattermost-plugin-custom-attributes/releases/latest)
 [![HW](https://img.shields.io/github/issues/mattermost/mattermost-plugin-custom-attributes/Up%20For%20Grabs?color=dark%20green&label=Help%20Wanted)](https://github.com/mattermost/mattermost-plugin-custom-attributes/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc+label%3A%22Up+For+Grabs%22+label%3A%22Help+Wanted%22)
 
-This plugin adds custom attributes to users in your Mattermost instance.  You can specify an Attribute, and then specify specific users, teams or groups which will display that attribute on their public profile - so other users can identify them easily.  This can be useful when there are Team Leads, Timezones, etc. and makes it easy to show who is on a particular team or Project.  
+This plugin adds custom attributes to users in your Mattermost instance and provides group mention functionality for the Mattermost Community Edition.
+
+## Features
+
+### Custom Attributes
+You can specify an Attribute, and then specify specific users, teams or groups which will display that attribute on their public profile - so other users can identify them easily.  This can be useful when there are Team Leads, Timezones, etc. and makes it easy to show who is on a particular team or Project.
 
 Currently the plugin only exposes the specified attributes in the user profile popover, but this plugin could be extended to allow displaying attributes elsewhere in the user interface, such as badges next to usernames. To use the "Group" features in this plugin requires a [Mattermost E20 License](https://mattermost.com/pricing/) to enable the AD/LDAP Groups Feature.
 
 We use this plugin on https://community.mattermost.com to distinguish Mattermost core committers and staff.
 
 ![image](https://user-images.githubusercontent.com/13119842/58710612-b5c7b380-838a-11e9-9974-4487daf82da5.png)
+
+### Group Mentions
+This plugin now includes **Group Mention** functionality, allowing you to mention multiple users at once using `@groupname` syntax - similar to Enterprise Edition's custom user groups feature, but available for Community Edition users.
+
+**Key Features:**
+- Create custom group mentions (e.g., `@developers`, `@frontend-team`)
+- Automatically notify all members when a group is mentioned
+- Define groups based on individual users, teams, or LDAP groups
+- System administrator-only access to manage group mentions
+- Works in Mattermost Community Edition
+
+**Example Usage:**
+When you type `@developers` in a message, all members of the "developers" group will be notified, just like individual @mentions.
 
 ## Installation
 
@@ -47,6 +65,8 @@ Their respective profile popovers display their information:
 
 ## Usage
 
+### Custom Attributes Configuration
+
 To add a custom attribute, edit your `config.json` file and add a "CustomAttributes" field. This field contains an array of the attributes you want to add.
 
 An attribute should have a `Name` field for what is displayed in the user interface as the attribute and an array of `UserIDs` for the users this attribute should apply to. The `Name` field can include Markdown, emojis and links.
@@ -57,10 +77,20 @@ for all members of these teams.
 You can also add an array of Mattermost group ID's to the `GroupIDs` parameter. The `Name` will then be displayed
 for all members who are apart of that group.
 
-Below is an example:
+### Group Mentions Configuration
 
+To add group mentions, edit your `config.json` file and add a "GroupMentions" field. This field contains an array of the group mentions you want to create.
 
-```
+A group mention should have:
+- `Name`: The mention keyword (e.g., "developers" for @developers)
+- `DisplayName`: A friendly display name shown in the UI
+- `UserIDs`: Array of individual user IDs to include
+- `TeamIDs`: Array of team IDs (all team members will be included)
+- `GroupIDs`: Array of LDAP group IDs (all group members will be included)
+
+Below is an example configuration:
+
+```json
 "PluginSettings": {
     ...
     "Plugins": {
@@ -70,13 +100,29 @@ Below is an example:
                     "Name": ":mattermost: [Core Committer](https://developers.mattermost.com/contribute/getting-started/core-committers/)",
                     "UserIDs": ["someuserID1", "someuserID2"],
                     "TeamIDs": ["someteamID1", "someteamID2"],
-                    "GroupIDs":["somegroupID1","somegroupID2"]
+                    "GroupIDs": ["somegroupID1","somegroupID2"]
                 },
                 {
                     "Name": ":mattermost: Staff",
                     "UserIDs": ["someuserID3", "someuserID4"],
                     "TeamIDs": ["someteamID3", "someteamID4"],
-                    "GroupIDs":["somegroupID3","somegroupID4"]
+                    "GroupIDs": ["somegroupID3","somegroupID4"]
+                }
+            ],
+            "GroupMentions": [
+                {
+                    "Name": "developers",
+                    "DisplayName": "Development Team",
+                    "UserIDs": ["devuserID1", "devuserID2"],
+                    "TeamIDs": ["devteamID1"],
+                    "GroupIDs": []
+                },
+                {
+                    "Name": "frontend-team",
+                    "DisplayName": "Frontend Team",
+                    "UserIDs": ["frontendID1", "frontendID2", "frontendID3"],
+                    "TeamIDs": [],
+                    "GroupIDs": []
                 }
             ]
         }
@@ -91,6 +137,8 @@ Below is an example:
     }
 },
 ```
+
+**Note:** You can also configure these settings via the System Console UI under **Plugins > Custom User Attributes**.
 
 ## Development
 

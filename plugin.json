@@ -22,6 +22,10 @@
             "key": "CustomAttributes",
             "type": "custom",
             "display_name": "Custom Attributes:"
+        }, {
+            "key": "GroupMentions",
+            "type": "custom",
+            "display_name": "Group Mentions:"
         }]
     }
 }

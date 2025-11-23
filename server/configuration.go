@@ -19,6 +19,7 @@ import (
 // copy appropriate for your types.
 type configuration struct {
 	CustomAttributes []CustomAttribute
+	GroupMentions    []GroupMention
 }
 
 type CustomAttribute struct {
@@ -26,6 +27,14 @@ type CustomAttribute struct {
 	UserIDs  []string
 	TeamIDs  []string
 	GroupIDs []string
+}
+
+type GroupMention struct {
+	Name        string   // The @mention name (e.g., "developers")
+	DisplayName string   // Display name in UI (e.g., "개발팀")
+	UserIDs     []string // Individual user IDs
+	TeamIDs     []string // Team IDs (all members of these teams)
+	GroupIDs    []string // LDAP Group IDs (all members of these groups)
 }
 
 // Clone shallow copies the configuration. Your implementation may require a deep copy if
@@ -48,6 +57,24 @@ func (c *configuration) Clone() *configuration {
 		copy(caClone.GroupIDs, ca.GroupIDs)
 
 		clone.CustomAttributes[i1] = caClone
+	}
+
+	clone.GroupMentions = make([]GroupMention, len(c.GroupMentions))
+	for i, gm := range c.GroupMentions {
+		gmClone := GroupMention{}
+		gmClone.Name = gm.Name
+		gmClone.DisplayName = gm.DisplayName
+
+		gmClone.UserIDs = make([]string, len(gm.UserIDs))
+		copy(gmClone.UserIDs, gm.UserIDs)
+
+		gmClone.TeamIDs = make([]string, len(gm.TeamIDs))
+		copy(gmClone.TeamIDs, gm.TeamIDs)
+
+		gmClone.GroupIDs = make([]string, len(gm.GroupIDs))
+		copy(gmClone.GroupIDs, gm.GroupIDs)
+
+		clone.GroupMentions[i] = gmClone
 	}
 
 	return &clone
